@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <style type="text/css">
+    input {
+      border-radius: 1em;
+      padding: 0.2em;
+      padding-left: 1em;
+    }
+
+    body {
+      background-color: black;
+    }
+
+    #chat {
+      display: none;
+      grid-template-rows: 10em 20em 3em;
+      grid-template-columns: 35em 10em;
+    }
+
+    #chatcss {
+      grid-column: 0;
+      grid-row: 0;
+      padding: 0;
+    }
+
+    #ricezione {
+      padding: 2em;
+    }
+
+    h1 {
+      color: white;
+      padding-left: 1em;
+      padding-right: 1em;
+      font-size: 4em;
+      border-radius: 1em;
+      grid-column: 0;
+      grid-row: 0;
+    }
+
+    p {
+      color: white;
+      grid-column-start: 1;
+      grid-column-end: 3;
+      grid-row: 3;
+      min-width: 500em;
+    }
+
+    textarea {
+      grid-column-start: 1;
+      grid-column-end: 3;
+      grid-row: 2;
+      border-radius: 1em;
+    }
+
+    button {
+      grid-column-start: 2;
+      grid-column-end: 3;
+      grid-row: 3;
+      border-radius: 1em;
+    }
+
+    #login {}
+  </style>
+
+  <script type="text/javascript">
+    var loginFatto = false;
+    var letturaNome;
+    function invio() {
+      console.log("pojng")
+      //parte che si connette al server
+      var invioMessaggio = new WebSocket("ws://192.168.1.157:8080/chat/server");
+      //quando la connessione e aperta si svolge questa funzione
+      invioMessaggio.onopen = function () {
+         letturaNome = document.getElementById("inputNome").value;
+        console.log(letturaNome);
+        var letturaPassword = document.getElementById("inputPass").value;
+        invioMessaggio.send("R" + "#" + letturaNome + "#" + letturaPassword);
+      };
+      //quando si riceve un messaggio si svolge quest'altra parte di codice
+      invioMessaggio.onmessage = function (message) {
+        document.getElementById("ricevi").textContent;
+        var risposta = message.data;
+        console.log(risposta);
+        //si verifica che il login non sia stato fatto
+        if (loginFatto == false) {
+          //si verifica che il login sia corretto
+
+          if (risposta == "L#Si") {
+            var oggettoDisplaysecondo = document.getElementById("login");
+            oggettoDisplaysecondo.style.display = "none";
+            var secondo = document.getElementById("chat");
+            secondo.style.display = "grid";
+            loginFatto = true;
+          } if (risposta == "L#No") {
+            window.alert("Login Errato");
+          }
+        } else {
+          var res = message.data.split("#");
+          document.getElementById("ricezione").textContent += res[1] + " - " + res[2] + " - "+ res [3] +"\n";
+          // document.getElementById("ricezione").textContent += message.data + "\n";
+        }
+
+      };
+    }
+
+    //   var txtInput = document.getElementById("txtInput");
+    //  txtInput.onkeypress = function (e) {
+    //     if (e.target.value.length >= 10) e.preventDefault();
+    //   }
+    //parte che invia i messaggi 
+    function invioMessage() {
+      var now = new Date();
+      var n = now.getHours();
+      var m = now.getMinutes();
+      var ora = n + ":" + m;
+      //connessione con il server 
+      var invioTesto = new WebSocket("ws://192.168.1.157:8080/chat/server");
+      invioTesto.onopen = function () {
+        console.log("secondo")
+        var letturaTesto = document.getElementById("ricevi").value;
+        console.log(letturaTesto);
+        invioTesto.send("M" + "#" + letturaNome + "#" + letturaTesto + "#" + ora);
+        document.getElementById("ricevi").value = "";
+      };
+    }
+
+  </script>
+
+  <meta charset="UTF-8">
+  <title>Login</title>
+</head>
+
+<body>
+  <div id="chat">
+    <h1 id="chatcss">Chats</h1>
+    <p>Text: <input type="text" name="ricevi" id="ricevi"></p>
+    <textarea id="ricezione" readonly></textarea><br />
+    <button onclick="invioMessage ()"> Invia Messaggio</button>
+
+  </div>
+  <div id="login">
+    <h1>Login</h1>
+    <p>
+      Username <input type="text" name="nome" id="inputNome">
+      Password <input type="text" name="password" id="inputPass">
+    </p>
+    <button onclick="invio ()">Invia</button>
+
+</body>
+
+</html>
