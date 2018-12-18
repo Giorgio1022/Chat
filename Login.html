@@ -99,7 +99,7 @@
           }
         } else {
           var res = message.data.split("#");
-          document.getElementById("ricezione").textContent += res[1] + " - " + res[2] + " - "+ res [3] +"\n";
+          document.getElementById("ricezione").textContent += res[1] + ": " + res[2] + "  "+ res [3] +"\n";
           // document.getElementById("ricezione").textContent += message.data + "\n";
         }
 
@@ -112,10 +112,15 @@
     //   }
     //parte che invia i messaggi 
     function invioMessage() {
+      //leggo ora e data in formato internazionale
       var now = new Date();
+      var giorno = now.getDate();
+      var mese=now.getMonth();
+      var anno=now.getFullYear();
       var n = now.getHours();
       var m = now.getMinutes();
-      var ora = n + ":" + m;
+     
+      var ora = anno+"-"+mese+"-"+giorno+" "+n + ":" + m;
       //connessione con il server 
       var invioTesto = new WebSocket("ws://192.168.1.176:8080/chat/server");
       invioTesto.onopen = function () {
