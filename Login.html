@@ -71,7 +71,7 @@
     function invio() {
       console.log("pojng")
       //parte che si connette al server
-      var invioMessaggio = new WebSocket("ws://192.168.1.157:8080/chat/server");
+      var invioMessaggio = new WebSocket("ws://192.168.1.176:8080/chat/server");
       //quando la connessione e aperta si svolge questa funzione
       invioMessaggio.onopen = function () {
          letturaNome = document.getElementById("inputNome").value;
