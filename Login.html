@@ -117,7 +117,7 @@
       var m = now.getMinutes();
       var ora = n + ":" + m;
       //connessione con il server 
-      var invioTesto = new WebSocket("ws://192.168.1.157:8080/chat/server");
+      var invioTesto = new WebSocket("ws://192.168.1.176:8080/chat/server");
       invioTesto.onopen = function () {
         console.log("secondo")
         var letturaTesto = document.getElementById("ricevi").value;
